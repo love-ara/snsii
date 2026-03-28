@@ -47,7 +47,7 @@ export default function ParentProgressPage() {
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900">Learner progress</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Enter your learner's ID to view their lesson progress and activity.
+            Enter your learner's email to view their lesson progress and activity.
           </p>
         </div>
 

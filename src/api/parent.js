@@ -1,4 +1,4 @@
 import api from "./axiosInstance";
 
-export const getLearnerProgress = (learnerId) =>
-  api.get(`/parent/learner/${learnerId}/progress`);
+export const getLearnerProgress = (learnerEmail) =>
+  api.get(`/parent/learner/${learnerEmail}/progress`);

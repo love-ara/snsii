@@ -12,25 +12,25 @@ const statusStyles = {
 };
 
 export default function ParentProgressPage() {
-  const [learnerId, setLearnerId] = useState("");
+  const [learnerEmail, setLearnerEmail] = useState("");
   const [progress, setProgress]   = useState(null);
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!learnerId.trim()) return;
+    if (!learnerEmail.trim()) return;
     setLoading(true);
     setError("");
     setProgress(null);
     try {
-      const res = await getLearnerProgress(learnerId.trim());
+      const res = await getLearnerProgress(learnerEmail.trim());
       setProgress(res.data);
     } catch (err) {
       setError(
         err.response?.status === 403
           ? "You do not have permission to view this learner's progress."
-          : err.response?.data?.message || "Learner not found. Check the ID and try again."
+          : err.response?.data?.message || "Learner not found. Check the email and try again."
       );
     } finally {
       setLoading(false);
@@ -53,21 +53,21 @@ export default function ParentProgressPage() {
 
         {/* Lookup form */}
         <form onSubmit={handleSearch} className="card p-6 mb-6">
-          <label className="label">Learner ID</label>
+          <label className="label">Learner Email</label>
           <div className="flex gap-3">
             <input
               className="input"
-              type="number"
-              placeholder="e.g. 42"
-              value={learnerId}
-              onChange={(e) => setLearnerId(e.target.value)}
+              type="email"
+              placeholder="e.g. precious@gmail.com"
+              value={learnerEmail}
+              onChange={(e) => setLearnerEmail(e.target.value)}
             />
             <button type="submit" disabled={loading} className="btn-primary whitespace-nowrap">
               {loading ? <Spinner size="sm" /> : "View progress"}
             </button>
           </div>
           <p className="mt-2 text-xs text-gray-400">
-            You can find the learner ID in the account confirmation email.
+            You can find the learner email in the account confirmation email.
           </p>
         </form>
 

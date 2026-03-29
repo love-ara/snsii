@@ -25,7 +25,21 @@ export default function LessonsPage() {
   const navigate = useNavigate();
   const { data: lessons, loading, error, execute } = useApi(getLessons);
 
-  useEffect(() => { execute(); }, [execute]);
+  // useEffect(() => { execute(); }, [execute]);
+    useEffect(() => {
+    const init = async () => {
+      try {
+        await getProfile();
+        await execute();
+      } catch (err) {
+        // No profile yet — send to assessment
+        if (err.response?.status === 404 || err.response?.status === 409) {
+          navigate("/learner/assessment");
+        }
+      }
+    };
+    init();
+  }, [execute, navigate]);
 
   if (loading) return <PageLoader message="Loading your lessons…" />;
 

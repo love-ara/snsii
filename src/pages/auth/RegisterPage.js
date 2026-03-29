@@ -55,8 +55,15 @@ export default function RegisterPage() {
       const { token, role, userId, email } = res.data;
       signIn({ role, userId, email }, token);
 
-      const redirects = { LEARNER: "/learner/lessons", PARENT: "/parent/progress", ADMIN: "/admin/dashboard" };
+      // const redirects = { LEARNER: "/learner/lessons", PARENT: "/parent/progress", ADMIN: "/admin/dashboard" };
+      //navigate(redirects[role] || "/");
+
+      if (role === "LEARNER") {
+      navigate("/learner/assessment"); // always send new registrations to assessment
+      }  else {
+     const redirects = { PARENT: "/parent/progress", ADMIN: "/admin/dashboard" };
       navigate(redirects[role] || "/");
+    }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {

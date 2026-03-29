@@ -4,6 +4,8 @@ import { login } from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
 import Alert from "../../components/common/Alert";
 import Spinner from "../../components/common/Spinner";
+import { getProfile } from "../../api/learner";
+
 
 export default function LoginPage() {
   const { signIn } = useAuth();
@@ -17,26 +19,35 @@ export default function LoginPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const res = await login(form.email, form.password);
-      const { token, role, userId, email } = res.data;
-      signIn({ role, userId, email }, token);
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+  try {
+    const res = await login(form.email, form.password);
+    const { token, role, userId, email } = res.data;
+    signIn({ role, userId, email }, token);
 
+    if (role === "LEARNER") {
+      // Check if profile exists — if not, send to assessment first
+      try {
+        await getProfile();
+        navigate("/learner/lessons"); // profile exists, go straight to lessons
+      } catch {
+        navigate("/learner/assessment"); // no profile yet, complete assessment first
+      }
+    } else {
       const redirects = {
-        LEARNER: "/learner/lessons",
-        PARENT:  "/parent/progress",
-        ADMIN:   "/admin/dashboard",
+        PARENT: "/parent/progress",
+        ADMIN:  "/admin/dashboard",
       };
       navigate(redirects[role] || "/");
-    } catch (err) {
-      setError(err.response?.data?.message || "Invalid email or password");
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.message || "Invalid email or password");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">

@@ -35,11 +35,13 @@ export default function LessonsPage() {
         // No profile yet — send to assessment
         if (err.response?.status === 404 || err.response?.status === 409) {
           navigate("/learner/assessment");
+          return;
         }
       }
     };
     init();
-  }, [execute, navigate]);
+      }, []);
+  // }, [execute, navigate]);
 
   if (loading) return <PageLoader message="Loading your lessons…" />;
 

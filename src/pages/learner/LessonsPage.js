@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLessons } from "../../api/learner";
+import { getLessons, getProfile } from "../../api/learner";
 import { useApi } from "../../hooks/useApi";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../../components/common/Navbar";
@@ -38,6 +38,7 @@ export default function LessonsPage() {
           return;
         }
       }
+      execute();
     };
     init();
       }, []);
